@@ -1,0 +1,6 @@
+@extends('layouts.app')
+@section('title', 'Audit trail')
+@section('content')
+<div class="mb-4"><a href="{{ route('companies.show',$company) }}" class="text-decoration-none">← {{ $company->legal_name }}</a><div class="eyebrow mt-3">Accountability</div><h1 class="page-title">Audit trail</h1><p class="text-muted">Recorded changes, imports, report decisions and period events for this company.</p></div>
+<div class="card"><div class="list-group list-group-flush">@forelse($logs as $log)<div class="list-group-item px-4 py-3"><div class="d-flex justify-content-between gap-3"><div><div class="fw-semibold">{{ str_replace(['.','_'],[' · ',' '],ucfirst($log->action)) }}</div><small class="text-muted">{{ $log->user?->name ?? 'Former user' }} · {{ $log->created_at->format('M j, Y H:i:s') }}</small></div><span class="badge text-bg-light">{{ class_basename($log->subject_type ?? 'Record') }} #{{ $log->subject_id }}</span></div>@if($log->details)<details class="mt-2"><summary class="small text-success">Change details</summary><pre class="small bg-light rounded p-2 mt-2 mb-0 text-wrap">{{ json_encode($log->details, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) }}</pre></details>@endif</div>@empty<div class="p-5 text-center text-muted">No audit events have been recorded.</div>@endforelse</div><div class="p-3">{{ $logs->links() }}</div></div>
+@endsection
